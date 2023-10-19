@@ -9,7 +9,7 @@
 #include <mutex>
 #include <simple_color/color.h>
 #include <simple_config/config.h>
-
+#include <fstream>
 
 namespace simple_logger {
 
