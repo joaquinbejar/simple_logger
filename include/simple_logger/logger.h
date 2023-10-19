@@ -42,7 +42,7 @@ namespace simple_logger {
 
         void setLevel(const std::string &s);
 
-        std::string getLevel() const;
+        [[nodiscard]] std::string getLevel() const;
 
         void setFile(const std::string &s);
 
