@@ -32,7 +32,7 @@ void LoggerConfig::from_json(const json &j) {
 
 // ---------------------------------------------------------------------------------------------------
 
-TEST_CASE("Logger rule of 5 ", "[MongoDB]") {
+TEST_CASE("Logger rule of 5 ", "[Logger]") {
     simple_logger::Logger obj1("debug");
     simple_logger::Logger obj2(obj1);
     simple_logger::Logger obj3 = obj1;
