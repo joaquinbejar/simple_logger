@@ -62,59 +62,59 @@ TEST_CASE("Declare logger Config wrong", "[Logger]") {
     setenv("LOGLEVEL", "caca", 1);
     LoggerConfig config;
     simple_logger::Logger logger(config);
-//    REQUIRE(logger.getLevel() == "info");
-//    REQUIRE(config.loglevel == "info");
-//    logger.setLevel("debug");
-//    REQUIRE(logger.getLevel() == "debug");
+    REQUIRE(logger.getLevel() == "info");
+    REQUIRE(*config.loglevel == "info");
+    logger.setLevel("debug");
+    REQUIRE(logger.getLevel() == "debug");
 }
 
-//TEST_CASE("Declare logger Config", "[Logger]") {
-//    setenv("LOGLEVEL", "error", 1);
-//    LoggerConfig config;
-//    simple_logger::Logger logger(config);
-//    REQUIRE(logger.getLevel() == "error");
-//}
+TEST_CASE("Declare logger Config", "[Logger]") {
+    setenv("LOGLEVEL", "error", 1);
+    LoggerConfig config;
+    simple_logger::Logger logger(config);
+    REQUIRE(logger.getLevel() == "error");
+}
 
-//TEST_CASE("Change logger Config", "[Logger]") {
-//    setenv("LOGLEVEL", "error", 1);
-//    LoggerConfig config;
-//    simple_logger::Logger logger(config);
-//    REQUIRE(logger.getLevel() == "error");
-//    config.loglevel = "debug";
-//    REQUIRE(logger.getLevel() == "debug");
-//}
-//
-//TEST_CASE("Change logger string pointer", "[Logger]") {
-//    std::string loglevel = "error";
-//    simple_logger::Logger logger(loglevel);
-//    REQUIRE(logger.getLevel() == "error");
-//    loglevel = "debug";
-//    REQUIRE(logger.getLevel() == "debug");
-//}
-//
-//TEST_CASE("Change logger string pointer error", "[Logger]") {
-//    std::shared_ptr<std::string> loglevel = std::make_shared<std::string>("error");
-//    simple_logger::Logger logger(loglevel);
-//    REQUIRE(logger.getLevel() == "error");
-//    logger.error("level error print error");
-//    logger.info("level error print info");
-//    logger.debug("level error print debug");
-//}
-//
-//TEST_CASE("Change logger string pointer info", "[Logger]") {
-//    std::shared_ptr<std::string> loglevel = std::make_shared<std::string>("info");
-//    simple_logger::Logger logger(loglevel);
-//    REQUIRE(logger.getLevel() == "info");
-//    logger.error("level info print error");
-//    logger.info("level info print info");
-//    logger.debug("level info print debug");
-//}
-//
-//TEST_CASE("Change logger string pointer debug", "[Logger]") {
-//    std::shared_ptr<std::string> loglevel = std::make_shared<std::string>("debug");
-//    simple_logger::Logger logger(loglevel);
-//    REQUIRE(logger.getLevel() == "debug");
-//    logger.error("level debug print error");
-//    logger.info("level debug print info");
-//    logger.debug("level debug print debug");
-//}
+TEST_CASE("Change logger Config", "[Logger]") {
+    setenv("LOGLEVEL", "error", 1);
+    LoggerConfig config;
+    simple_logger::Logger logger(config);
+    REQUIRE(logger.getLevel() == "error");
+    *config.loglevel = "debug";
+    REQUIRE(logger.getLevel() == "debug");
+}
+
+TEST_CASE("Change logger string pointer", "[Logger]") {
+    std::shared_ptr<std::string> loglevel = std::make_shared<std::string>("error");
+    simple_logger::Logger logger(loglevel);
+    REQUIRE(logger.getLevel() == "error");
+    *loglevel = "debug";
+    REQUIRE(logger.getLevel() == "debug");
+}
+
+TEST_CASE("Change logger string pointer error", "[Logger]") {
+    std::shared_ptr<std::string> loglevel = std::make_shared<std::string>("error");
+    simple_logger::Logger logger(loglevel);
+    REQUIRE(logger.getLevel() == "error");
+    logger.error("level error print error");
+    logger.info("level error print info");
+    logger.debug("level error print debug");
+}
+
+TEST_CASE("Change logger string pointer info", "[Logger]") {
+    std::shared_ptr<std::string> loglevel = std::make_shared<std::string>("info");
+    simple_logger::Logger logger(loglevel);
+    REQUIRE(logger.getLevel() == "info");
+    logger.error("level info print error");
+    logger.info("level info print info");
+    logger.debug("level info print debug");
+}
+
+TEST_CASE("Change logger string pointer debug", "[Logger]") {
+    std::shared_ptr<std::string> loglevel = std::make_shared<std::string>("debug");
+    simple_logger::Logger logger(loglevel);
+    REQUIRE(logger.getLevel() == "debug");
+    logger.error("level debug print error");
+    logger.info("level debug print info");
+    logger.debug("level debug print debug");
+}
