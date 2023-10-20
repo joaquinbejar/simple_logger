@@ -47,7 +47,7 @@ namespace simple_logger {
         write_to_file = true;
     }
 
-    void Logger::log_debug(const std::string &s, bool flush) {
+    void Logger::debug(const std::string &s, bool flush) {
         if (*this->m_level == "debug") {
             if (s.empty()) {
                 std::lock_guard<std::mutex> lock(m_mtx);
@@ -58,7 +58,7 @@ namespace simple_logger {
         }
     }
 
-    void Logger::log_info(const std::string &s, bool flush) {
+    void Logger::info(const std::string &s, bool flush) {
         if (*this->m_level == "debug" || *this->m_level == "info") {
             if (s.empty()) {
                 std::lock_guard<std::mutex> lock(m_mtx);
@@ -69,7 +69,7 @@ namespace simple_logger {
         }
     }
 
-    void Logger::log_error(const std::string &s, bool flush) {
+    void Logger::error(const std::string &s, bool flush) {
         if (*this->m_level == "error" || *this->m_level == "info" || *this->m_level == "debug") {
             if (s.empty()) {
                 std::lock_guard<std::mutex> lock(m_mtx);

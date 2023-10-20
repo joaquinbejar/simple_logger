@@ -92,29 +92,29 @@ TEST_CASE("Change logger string pointer", "[Logger]") {
     REQUIRE(logger.getLevel() == "debug");
 }
 
-TEST_CASE("Change logger string pointer log_error", "[Logger]") {
+TEST_CASE("Change logger string pointer error", "[Logger]") {
     std::shared_ptr<std::string> loglevel = std::make_shared<std::string>("error");
     simple_logger::Logger logger(loglevel);
     REQUIRE(logger.getLevel() == "error");
-    logger.log_error("level error print error");
-    logger.log_info("level error print info");
-    logger.log_debug("level error print debug");
+    logger.error("level error print error");
+    logger.info("level error print info");
+    logger.debug("level error print debug");
 }
 
-TEST_CASE("Change logger string pointer log_info", "[Logger]") {
+TEST_CASE("Change logger string pointer info", "[Logger]") {
     std::shared_ptr<std::string> loglevel = std::make_shared<std::string>("info");
     simple_logger::Logger logger(loglevel);
     REQUIRE(logger.getLevel() == "info");
-    logger.log_error("level info print error");
-    logger.log_info("level info print info");
-    logger.log_debug("level info print debug");
+    logger.error("level info print error");
+    logger.info("level info print info");
+    logger.debug("level info print debug");
 }
 
-TEST_CASE("Change logger string pointer log_debug", "[Logger]") {
+TEST_CASE("Change logger string pointer debug", "[Logger]") {
     std::shared_ptr<std::string> loglevel = std::make_shared<std::string>("debug");
     simple_logger::Logger logger(loglevel);
     REQUIRE(logger.getLevel() == "debug");
-    logger.log_error("level debug print error");
-    logger.log_info("level debug print info");
-    logger.log_debug("level debug print debug");
+    logger.error("level debug print error");
+    logger.info("level debug print info");
+    logger.debug("level debug print debug");
 }

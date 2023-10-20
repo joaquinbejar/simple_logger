@@ -46,11 +46,11 @@ namespace simple_logger {
 
         void setFile(const std::string &s);
 
-        void log_info(const std::string &s, bool flush = false);
+        void info(const std::string &s, bool flush = false);
 
-        void log_debug(const std::string &s, bool flush = false);
+        void debug(const std::string &s, bool flush = false);
 
-        void log_error(const std::string &s, bool flush = false);
+        void error(const std::string &s, bool flush = false);
 
     private:
         std::shared_ptr<std::string> m_level = std::make_shared<std::string>("info");

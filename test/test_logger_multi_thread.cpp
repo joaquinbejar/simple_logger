@@ -16,9 +16,9 @@ TEST_CASE("Logger can print in multi-thread environment", "[Cache]") {
     for (int i = 0; i < number_of_threads; ++i) {
         threads.emplace_back([&logger,  i] {
             for (int j = 0; j < 1000; ++j) {
-                logger.log_debug("This is a debug message from thread " + std::to_string(i));
-                logger.log_info("This is a info message from thread " + std::to_string(i));
-                logger.log_error("This is a error message from thread " + std::to_string(i));
+                logger.debug("This is a debug message from thread " + std::to_string(i));
+                logger.info("This is a info message from thread " + std::to_string(i));
+                logger.error("This is a error message from thread " + std::to_string(i));
             }
         });
     }
