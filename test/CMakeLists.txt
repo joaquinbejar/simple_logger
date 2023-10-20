@@ -6,6 +6,7 @@ target_include_directories(test_simple_logger
         ${SIMPLE_COLOR_INCLUDE}
         ${SIMPLE_CONFIG_INCLUDE}
         ${NLOHMANN_JSON_INCLUDE}
+        ${COMMON_INCLUDE}
 )
 
 target_link_libraries(test_simple_logger PRIVATE Catch2::Catch2WithMain)
@@ -13,6 +14,7 @@ target_link_libraries(test_simple_logger PRIVATE
         simple_logger
         simple_color
         simple_config
+        common
 )
 
 
@@ -23,6 +25,7 @@ target_include_directories(test_logger_multi_thread
         ${SIMPLE_COLOR_INCLUDE}
         ${SIMPLE_CONFIG_INCLUDE}
         ${NLOHMANN_JSON_INCLUDE}
+        ${COMMON_INCLUDE}
 )
 
 target_link_libraries(test_logger_multi_thread PRIVATE Catch2::Catch2WithMain)
@@ -30,4 +33,5 @@ target_link_libraries(test_logger_multi_thread PRIVATE
         simple_logger
         simple_color
         simple_config
+        common
 )
