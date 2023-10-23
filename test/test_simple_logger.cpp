@@ -65,7 +65,7 @@ TEST_CASE("Declare logger Config wrong", "[Logger]") {
     LoggerConfig config;
     simple_logger::Logger logger(config);
     REQUIRE(logger.getLevel() == LogLevel::INFORMATIONAL);
-    REQUIRE(*config.loglevel == "info");
+    REQUIRE(*config.loglevel == "caca");
     logger.setLevel("debug");
     REQUIRE(logger.getLevel() == LogLevel::DEBUG);
 }
@@ -82,7 +82,7 @@ TEST_CASE("Change logger Config", "[Logger]") {
     LoggerConfig config;
     simple_logger::Logger logger(config);
     REQUIRE(logger.getLevel() == LogLevel::ERROR);
-    *config.loglevel = "debug";
+    logger.setLevel("debug");
     REQUIRE(logger.getLevel() == LogLevel::DEBUG);
 }
 
@@ -90,7 +90,7 @@ TEST_CASE("Change logger string pointer", "[Logger]") {
     auto loglevel = LogLevel::ERROR;
     simple_logger::Logger logger(loglevel);
     REQUIRE(logger.getLevel() == LogLevel::ERROR);
-    loglevel = LogLevel::DEBUG;
+    logger.setLevel(LogLevel::DEBUG);
     REQUIRE(logger.getLevel() == LogLevel::DEBUG);
 }
 

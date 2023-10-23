@@ -60,6 +60,8 @@ namespace simple_logger {
 
         void setLevel(const std::string &s);
 
+        void setLevel(const LogLevel &level);
+
         LogLevel getLevel() const;
 
         void setFile(const std::string &s);

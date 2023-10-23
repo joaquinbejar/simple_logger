@@ -75,6 +75,10 @@ namespace simple_logger {
         }
     }
 
+    void Logger::setLevel(const LogLevel &level) {
+        this->m_level = level;
+    }
+
     LogLevel Logger::getLevel() const {
         return m_level;
     }
