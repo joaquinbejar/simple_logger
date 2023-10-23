@@ -13,6 +13,20 @@
 
 namespace simple_logger {
 
+    enum class LogLevel {
+        EMERGENCY = 0,
+        ALERT = 1,
+        CRITICAL = 2,
+        ERROR = 3,
+        WARNING = 4,
+        NOTICE = 5,
+        INFORMATIONAL = 6,
+        DEBUG = 7
+    };
+
+    std::string get_colored_level(LogLevel level) ;
+
+
     class Logger {
     public:
 
@@ -23,6 +37,10 @@ namespace simple_logger {
         explicit Logger(const std::shared_ptr<std::string> &level);
 
         explicit Logger(const std::string &level, const std::string &filename);
+
+        explicit Logger(const LogLevel &level, const std::string &filename);
+
+        explicit Logger(const LogLevel &level);
 
         //copy constructor
         Logger(const Logger &rhs);
@@ -42,7 +60,7 @@ namespace simple_logger {
 
         void setLevel(const std::string &s);
 
-        [[nodiscard]] std::string getLevel() const;
+        LogLevel getLevel() const;
 
         void setFile(const std::string &s);
 
@@ -53,12 +71,9 @@ namespace simple_logger {
         void error(const std::string &s, bool flush = false);
 
     private:
-        std::shared_ptr<std::string> m_level = std::make_shared<std::string>("info");
+        LogLevel m_level = LogLevel::INFORMATIONAL;
         std::ofstream m_log_file;
         bool write_to_file = false;
-        std::string INFO_ = simple_color::give_color("bwhite", "[INFO]: ");
-        std::string DEBUG_ = simple_color::give_color("byellow", "[DEBUG]: ");
-        std::string ERROR_ = simple_color::give_color("bred", "[ERROR]: ");
 
         void safe_cout(const std::string &s, bool flush = false);
 

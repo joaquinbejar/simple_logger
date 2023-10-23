@@ -5,11 +5,32 @@
 #include "simple_logger/logger.h"
 
 namespace simple_logger {
-    Logger::Logger(simple_config::Config &config) {
-        if (*config.loglevel != "debug" && *config.loglevel != "info" && *config.loglevel != "error") {
-            *config.loglevel = "info";
+
+    std::string get_colored_level(LogLevel level) {
+        switch (level) {
+            case LogLevel::INFORMATIONAL:
+                return simple_color::give_color(simple_color::Colors::WHITE, "[INFO]: ");
+            case LogLevel::DEBUG:
+                return simple_color::give_color(simple_color::Colors::LIGHTGOLDENROD1, "[DEBUG]: ");
+            case LogLevel::ERROR:
+                return simple_color::give_color(simple_color::Colors::RED, "[ERROR]: ");
+            case LogLevel::EMERGENCY:
+                return simple_color::give_color(simple_color::Colors::MAGENTA, "[EMERGENCY]: ");
+            case LogLevel::ALERT:
+                return simple_color::give_color(simple_color::Colors::ORANGE, "[ALERT]: ");
+            case LogLevel::CRITICAL:
+                return simple_color::give_color(simple_color::Colors::ORANGE, "[CRITICAL]: ", true);
+            case LogLevel::WARNING:
+                return simple_color::give_color(simple_color::Colors::YELLOW, "[WARNING]: ");
+            case LogLevel::NOTICE:
+                return simple_color::give_color(simple_color::Colors::LIGHTGREEN, "[NOTICE]: ");
+            default:
+                return "[UNKNOWN]: ";
         }
-        this->m_level = std::shared_ptr<std::string>(config.loglevel);
+    }
+
+    Logger::Logger(simple_config::Config &config) {
+        this->setLevel(*config.loglevel);
     }
 
     Logger::Logger(const std::string &level) {
@@ -18,28 +39,44 @@ namespace simple_logger {
 
     Logger::Logger(const std::string &level, const std::string &filename) {
         setFile(filename);
-        *this->m_level = level;
+        this->setLevel(level);
     }
 
     Logger::Logger(const std::shared_ptr<std::string> &level) {
-        if (*level != "debug" && *level != "info" && *level != "error") {
-            *level = "info";
-        }
-        this->m_level = std::shared_ptr<std::string>(level);
+        this->setLevel(*level);
+    }
+
+    Logger::Logger(const LogLevel &level, const std::string &filename) {
+        setFile(filename);
+        this->m_level = level;
+    }
+
+    Logger::Logger(const LogLevel &level) {
+        this->m_level = level;
     }
 
     void Logger::setLevel(const std::string &s) {
-        if (s != "debug" && s != "info" && s != "error") {
-            m_level = std::make_shared<std::string>("info");
-        } else if (m_level == nullptr) {
-            m_level = std::make_shared<std::string>(s);
+        if (s == "debug") {
+            this->m_level = LogLevel::DEBUG;
+        } else if (s == "error") {
+            this->m_level = LogLevel::ERROR;
+        } else if (s == "warning") {
+            this->m_level = LogLevel::WARNING;
+        } else if (s == "notice") {
+            this->m_level = LogLevel::NOTICE;
+        } else if (s == "alert") {
+            this->m_level = LogLevel::ALERT;
+        } else if (s == "emergency") {
+            this->m_level = LogLevel::EMERGENCY;
+        } else if (s == "critical") {
+            this->m_level = LogLevel::CRITICAL;
         } else {
-            *m_level = s;
+            this->m_level = LogLevel::INFORMATIONAL;
         }
     }
 
-    std::string Logger::getLevel() const {
-        return *m_level;
+    LogLevel Logger::getLevel() const {
+        return m_level;
     }
 
     void Logger::setFile(const std::string &s) {
@@ -48,35 +85,36 @@ namespace simple_logger {
     }
 
     void Logger::debug(const std::string &s, bool flush) {
-        if (*this->m_level == "debug") {
+        if (this->m_level == LogLevel::DEBUG) {
             if (s.empty()) {
                 std::lock_guard<std::mutex> lock(m_mtx);
                 std::cout << std::endl;
                 return;
             }
-            this->m_log(DEBUG_ + s, flush);
+            this->m_log(get_colored_level(LogLevel::DEBUG) + s, flush);
         }
     }
 
     void Logger::info(const std::string &s, bool flush) {
-        if (*this->m_level == "debug" || *this->m_level == "info") {
+        if (this->m_level == LogLevel::DEBUG || this->m_level == LogLevel::INFORMATIONAL) {
             if (s.empty()) {
                 std::lock_guard<std::mutex> lock(m_mtx);
                 std::cout << std::endl;
                 return;
             }
-            this->m_log(INFO_ + s, flush);
+            this->m_log(get_colored_level(LogLevel::INFORMATIONAL) + s, flush);
         }
     }
 
     void Logger::error(const std::string &s, bool flush) {
-        if (*this->m_level == "error" || *this->m_level == "info" || *this->m_level == "debug") {
+        if (this->m_level == LogLevel::ERROR || this->m_level == LogLevel::DEBUG ||
+            this->m_level == LogLevel::INFORMATIONAL) {
             if (s.empty()) {
                 std::lock_guard<std::mutex> lock(m_mtx);
                 std::cerr << std::endl;
                 return;
             }
-            this->m_log_error(ERROR_ + s, flush);
+            this->m_log(get_colored_level(LogLevel::ERROR) + s, flush);
         }
     }
 
@@ -129,14 +167,14 @@ namespace simple_logger {
     }
 
     bool Logger::operator==(const Logger &rhs) const {
-        if (*this->m_level == *rhs.m_level && this->write_to_file == rhs.write_to_file) {
+        if (this->m_level == rhs.m_level && this->write_to_file == rhs.write_to_file) {
             return true;
         }
         return false;
     }
 
     Logger::Logger(const Logger &rhs) {
-        this->m_level = std::make_shared<std::string>(*rhs.m_level);
+        this->m_level = rhs.m_level;
         this->write_to_file = rhs.write_to_file;
     }
 
@@ -144,13 +182,13 @@ namespace simple_logger {
         if (this == &rhs) {
             return *this;
         }
-        this->m_level = std::make_shared<std::string>(*rhs.m_level);
+        this->m_level = rhs.m_level;
         this->write_to_file = rhs.write_to_file;
         return *this;
     }
 
     Logger::Logger(Logger &&rhs) noexcept {
-        this->m_level = std::move(rhs.m_level);
+        this->m_level = rhs.m_level;
         this->write_to_file = rhs.write_to_file;
     }
 
@@ -158,7 +196,7 @@ namespace simple_logger {
         if (this == &rhs) {
             return *this;
         }
-        this->m_level = std::move(rhs.m_level);
+        this->m_level = rhs.m_level;
         this->write_to_file = rhs.write_to_file;
         return *this;
     }
