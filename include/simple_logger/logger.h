@@ -42,11 +42,12 @@ namespace simple_logger {
 
         explicit Logger(const LogLevel &level);
 
-        //copy constructor
-        Logger(const Logger &rhs);
+        Logger() = delete;
+
+        Logger(const Logger &) = delete;
 
         //copy assignment
-        Logger &operator=(const Logger &rhs);
+        Logger &operator=(const Logger &rhs) = delete;
 
         //move constructor
         Logger(Logger &&rhs) noexcept;
@@ -66,11 +67,16 @@ namespace simple_logger {
 
         void setFile(const std::string &s);
 
-        void info(const std::string &s, bool flush = false);
-
-        void debug(const std::string &s, bool flush = false);
-
-        void error(const std::string &s, bool flush = false);
+        template<LogLevel logLevel>
+        void send(const std::string &s, bool flush = false) {
+            if (m_level >= logLevel) {
+                if (logLevel <= LogLevel::ERROR) {
+                    m_log_error(get_colored_level(logLevel) + s, flush);
+                } else {
+                    m_log(get_colored_level(logLevel) + s, flush);
+                }
+            }
+        }
 
     private:
         LogLevel m_level = LogLevel::INFORMATIONAL;

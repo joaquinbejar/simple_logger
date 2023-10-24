@@ -88,40 +88,6 @@ namespace simple_logger {
         write_to_file = true;
     }
 
-    void Logger::debug(const std::string &s, bool flush) {
-        if (this->m_level == LogLevel::DEBUG) {
-            if (s.empty()) {
-                std::lock_guard<std::mutex> lock(m_mtx);
-                std::cout << std::endl;
-                return;
-            }
-            this->m_log(get_colored_level(LogLevel::DEBUG) + s, flush);
-        }
-    }
-
-    void Logger::info(const std::string &s, bool flush) {
-        if (this->m_level == LogLevel::DEBUG || this->m_level == LogLevel::INFORMATIONAL) {
-            if (s.empty()) {
-                std::lock_guard<std::mutex> lock(m_mtx);
-                std::cout << std::endl;
-                return;
-            }
-            this->m_log(get_colored_level(LogLevel::INFORMATIONAL) + s, flush);
-        }
-    }
-
-    void Logger::error(const std::string &s, bool flush) {
-        if (this->m_level == LogLevel::ERROR || this->m_level == LogLevel::DEBUG ||
-            this->m_level == LogLevel::INFORMATIONAL) {
-            if (s.empty()) {
-                std::lock_guard<std::mutex> lock(m_mtx);
-                std::cerr << std::endl;
-                return;
-            }
-            this->m_log(get_colored_level(LogLevel::ERROR) + s, flush);
-        }
-    }
-
     void Logger::safe_cout(const std::string &s, bool flush) {
         std::lock_guard<std::mutex> lock(m_mtx);
         std::cout << s;
@@ -177,19 +143,6 @@ namespace simple_logger {
         return false;
     }
 
-    Logger::Logger(const Logger &rhs) {
-        this->m_level = rhs.m_level;
-        this->write_to_file = rhs.write_to_file;
-    }
-
-    Logger &Logger::operator=(const Logger &rhs) {
-        if (this == &rhs) {
-            return *this;
-        }
-        this->m_level = rhs.m_level;
-        this->write_to_file = rhs.write_to_file;
-        return *this;
-    }
 
     Logger::Logger(Logger &&rhs) noexcept {
         this->m_level = rhs.m_level;

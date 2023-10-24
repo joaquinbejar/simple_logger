@@ -36,11 +36,11 @@ void LoggerConfig::from_json(const json &j) {
 
 TEST_CASE("Logger rule of 5 ", "[Logger]") {
     simple_logger::Logger obj1("debug");
-    simple_logger::Logger obj2(obj1);
-    simple_logger::Logger obj3 = obj1;
+    std::shared_ptr<simple_logger::Logger> obj2 = std::make_shared<simple_logger::Logger>("debug");
+    const std::shared_ptr<simple_logger::Logger>& obj3 = obj2;
     simple_logger::Logger obj4(std::move(obj1));
-    simple_logger::Logger obj5 = std::move(obj2);
-    REQUIRE(obj3.getLevel() == LogLevel::DEBUG);
+    simple_logger::Logger obj5 = std::move(*obj2);
+    REQUIRE(obj3->getLevel() == LogLevel::DEBUG);
     REQUIRE(obj4.getLevel() ==LogLevel::DEBUG);
     REQUIRE(obj5.getLevel() == LogLevel::DEBUG);
 }
@@ -58,6 +58,11 @@ TEST_CASE("Declare logger on file", "[Logger]") {
     REQUIRE(logger.getLevel() == LogLevel::DEBUG);
     logger.setLevel("info");
     REQUIRE(logger.getLevel() == LogLevel::INFORMATIONAL);
+
+    simple_logger::Logger logger1(LogLevel::DEBUG, "test.log");
+    REQUIRE(logger1.getLevel() == LogLevel::DEBUG);
+    logger1.setLevel("info");
+    REQUIRE(logger1.getLevel() == LogLevel::INFORMATIONAL);
 }
 
 TEST_CASE("Declare logger Config wrong", "[Logger]") {
@@ -98,25 +103,88 @@ TEST_CASE("Change logger string pointer error", "[Logger]") {
     auto loglevel = LogLevel::ERROR;
     simple_logger::Logger logger(loglevel);
     REQUIRE(logger.getLevel() == LogLevel::ERROR);
-    logger.error("level error print error");
-    logger.info("level error print info");
-    logger.debug("level error print debug");
+    logger.send<LogLevel::ERROR>("level error print error");
+    logger.send<LogLevel::INFORMATIONAL>("level error print info");
+    logger.send<LogLevel::DEBUG>("level error print debug");
 }
 
 TEST_CASE("Change logger string pointer info", "[Logger]") {
     auto loglevel = LogLevel::INFORMATIONAL;
     simple_logger::Logger logger(loglevel);
     REQUIRE(logger.getLevel() == LogLevel::INFORMATIONAL);
-    logger.error("level info print error");
-    logger.info("level info print info");
-    logger.debug("level info print debug");
+    logger.send<LogLevel::ERROR>("level info print error");
+    logger.send<LogLevel::INFORMATIONAL>("level info print info");
+    logger.send<LogLevel::DEBUG>("level info print debug");
 }
 
 TEST_CASE("Change logger string pointer debug", "[Logger]") {
     std::shared_ptr<std::string> loglevel = std::make_shared<std::string>("debug");
     simple_logger::Logger logger(loglevel);
     REQUIRE(logger.getLevel() == LogLevel::DEBUG);
-    logger.error("level debug print error");
-    logger.info("level debug print info");
-    logger.debug("level debug print debug");
+    logger.send<LogLevel::ERROR>("level debug print error");
+    logger.send<LogLevel::INFORMATIONAL>("level debug print info");
+    logger.send<LogLevel::DEBUG>("level debug print debug");
+}
+
+TEST_CASE("Logger send template function") {
+
+    SECTION("Log level Debug") {
+        simple_logger::Logger logger("debug"); // must log everything
+
+        logger.send<LogLevel::INFORMATIONAL>("I'm DEBUG and this is a Info message");
+        logger.send<LogLevel::ERROR>("I'm DEBUG and this is a Error message");
+        logger.send<LogLevel::DEBUG>("I'm DEBUG and this is a Debug message");
+        logger.send<LogLevel::CRITICAL>("I'm DEBUG and this is a Critical message");
+    }
+
+    SECTION("Log level Info") {
+        simple_logger::Logger logger(LogLevel::INFORMATIONAL);
+
+        logger.send<LogLevel::INFORMATIONAL>("I'm INFORMATIONAL and this is a Info message");
+        logger.send<LogLevel::ERROR>("I'm INFORMATIONAL and this is a Error message");
+        logger.send<LogLevel::DEBUG>("I'm INFORMATIONAL and this is a Debug message"); // not logged
+        logger.send<LogLevel::CRITICAL>("I'm INFORMATIONAL and this is a Critical message");
+    }
+
+    SECTION("Log level Notice") {
+        simple_logger::Logger logger(LogLevel::NOTICE);
+
+        logger.send<LogLevel::INFORMATIONAL>("I'm NOTICE and this is a Info message"); // not logged
+        logger.send<LogLevel::NOTICE>("I'm NOTICE and this is a Notice message");
+        logger.send<LogLevel::ERROR>("I'm NOTICE and this is a Error message");
+        logger.send<LogLevel::DEBUG>("I'm NOTICE and this is a Debug message"); // not logged
+        logger.send<LogLevel::CRITICAL>("I'm NOTICE and this is a Critical message");
+    }
+
+    SECTION("Log level Error") {
+        simple_logger::Logger logger(LogLevel::ERROR);
+
+        logger.send<LogLevel::INFORMATIONAL>("I'm ERROR and this is a Info message"); // not logged
+        logger.send<LogLevel::ERROR>("I'm ERROR and this is a Error message");
+        logger.send<LogLevel::DEBUG>("I'm ERROR and this is a Debug message"); // not logged
+        logger.send<LogLevel::CRITICAL>("I'm ERROR and this is a Critical message");
+    }
+
+    SECTION("Log level Alert") {
+        simple_logger::Logger logger(LogLevel::ALERT);
+
+        logger.send<LogLevel::INFORMATIONAL>("I'm ALERT and this is a Info message"); // not logged
+        logger.send<LogLevel::ERROR>("I'm ALERT and this is a Error message"); // not logged
+        logger.send<LogLevel::DEBUG>("I'm ALERT and this is a Debug message"); // not logged
+        logger.send<LogLevel::CRITICAL>("I'm ALERT and this is a Critical message"); // not logged
+        logger.send<LogLevel::ALERT>("I'm ALERT and this is a ALERT message");
+        logger.send<LogLevel::EMERGENCY>("I'm ALERT and this is a EMERGENCY message");
+    }
+
+    SECTION("Log level EMERGENCY") {
+        simple_logger::Logger logger(LogLevel::EMERGENCY);
+
+        logger.send<LogLevel::INFORMATIONAL>("I'm EMERGENCY and this is a Info message"); // not logged
+        logger.send<LogLevel::ERROR>("I'm EMERGENCY and this is a Error message"); // not logged
+        logger.send<LogLevel::DEBUG>("I'm EMERGENCY and this is a Debug message"); // not logged
+        logger.send<LogLevel::CRITICAL>("I'm EMERGENCY and this is a Critical message"); // not logged
+        logger.send<LogLevel::ALERT>("I'm EMERGENCY and this is a ALERT message"); // not logged
+        logger.send<LogLevel::EMERGENCY>("I'm EMERGENCY and this is a EMERGENCY message");
+    }
+
 }
