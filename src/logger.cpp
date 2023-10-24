@@ -94,6 +94,9 @@ namespace simple_logger {
         if (flush) {
             std::cout.flush();
         }
+        if (write_to_file) {
+            m_log_file << s ;
+        }
     }
 
     void Logger::safe_cerr(const std::string &s, bool flush) {
@@ -101,6 +104,10 @@ namespace simple_logger {
         std::cerr << s;
         if (flush) {
             std::cerr.flush();
+        }
+
+        if (write_to_file) {
+            m_log_file << s ;
         }
     }
 
@@ -114,10 +121,6 @@ namespace simple_logger {
         } else {
             safe_cout(time_prefix.str() + "\n");
         }
-
-        if (write_to_file) {
-            m_log_file << time_prefix.str() << std::endl;
-        }
     }
 
     void Logger::m_log_error(const std::string &s, bool flush) {
@@ -129,10 +132,6 @@ namespace simple_logger {
             safe_cerr("\r" + time_prefix.str(), flush);
         } else {
             safe_cerr(time_prefix.str() + "\n");
-        }
-
-        if (write_to_file) {
-            m_log_file << time_prefix.str() << std::endl;
         }
     }
 
