@@ -5,6 +5,6 @@ FetchContent_Declare(common
 )
 FetchContent_MakeAvailable(common)
 if (CMAKE_DEBUG)
-    message(STATUS "COMMON_SOURCE_DIR ${common_SOURCE_DIR}")
+    message(STATUS "simple_logger/cmake COMMON_SOURCE_DIR ${common_SOURCE_DIR}")
 endif ()
 set(COMMON_INCLUDE ${common_SOURCE_DIR}/include CACHE INTERNAL "")

@@ -5,6 +5,6 @@ FetchContent_Declare(simple_config
 )
 FetchContent_MakeAvailable(simple_config)
 if (CMAKE_DEBUG)
-    message(STATUS "SIMPLE_CONFIG_SOURCE_DIR ${simple_config_SOURCE_DIR}")
+    message(STATUS "simple_logger/cmake SIMPLE_CONFIG_SOURCE_DIR ${simple_config_SOURCE_DIR}")
 endif ()
 set(SIMPLE_CONFIG_INCLUDE ${simple_config_SOURCE_DIR}/include CACHE INTERNAL "")

@@ -7,7 +7,7 @@ project(simple_logger)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 set(SIMPLE_LOGGER_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 if (CMAKE_DEBUG)
-    message(STATUS "SIMPLE_LOGGER_INCLUDE ${SIMPLE_LOGGER_INCLUDE}")
+    message(STATUS "simple_logger SIMPLE_LOGGER_INCLUDE ${SIMPLE_LOGGER_INCLUDE}")
 endif ()
 
 include(cmake/simple_color.cmake)
@@ -32,7 +32,7 @@ target_link_libraries(simple_logger PUBLIC
 install(TARGETS simple_logger DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include)
 
-option(NO_SIMPLE_LOGGER_TESTS "Disable Current tests" OFF)
+option(NO_SIMPLE_LOGGER_TESTS "simple_logger Disable Current tests" OFF)
 
 if (NOT NO_SIMPLE_LOGGER_TESTS)
     include(FetchContent)
