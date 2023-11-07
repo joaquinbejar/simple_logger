@@ -6,7 +6,9 @@ project(simple_logger)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 set(SIMPLE_LOGGER_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/include")
-message(STATUS "SIMPLE_LOGGER_INCLUDE ${SIMPLE_LOGGER_INCLUDE}")
+if (CMAKE_DEBUG)
+    message(STATUS "SIMPLE_LOGGER_INCLUDE ${SIMPLE_LOGGER_INCLUDE}")
+endif ()
 
 include(cmake/simple_color.cmake)
 include(cmake/common.cmake)
