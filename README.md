@@ -1,4 +1,6 @@
-#  simple logger
+#  [simple logger](LICENSE)
+
+VERSION: 0.1.0
 
 0. EMERGENCY: A panic-level condition necessitating immediate attention from the entire technical team. Affects multiple systems and could have catastrophic consequences (e.g., natural disasters).
 
