@@ -6,10 +6,14 @@ project(simple_logger)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 set(SIMPLE_LOGGER_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/include")
-message(STATUS "SIMPLE_LOGGER_INCLUDE ${SIMPLE_LOGGER_INCLUDE}")
+if (CMAKE_DEBUG)
+    message(STATUS "simple_logger SIMPLE_LOGGER_INCLUDE ${SIMPLE_LOGGER_INCLUDE}")
+endif ()
 
 include(cmake/simple_color.cmake)
+include(cmake/common.cmake)
 include(cmake/simple_config.cmake)
+
 
 add_library(simple_logger STATIC src/logger.cpp)
 target_include_directories(simple_logger PRIVATE
@@ -17,15 +21,18 @@ target_include_directories(simple_logger PRIVATE
         ${SIMPLE_COLOR_INCLUDE}
         ${SIMPLE_CONFIG_INCLUDE}
         ${NLOHMANN_JSON_INCLUDE}
+        ${COMMON_INCLUDE}
 )
 target_link_libraries(simple_logger PUBLIC
         simple_color
-        simple_config)
+        simple_config
+        common
+)
 
 install(TARGETS simple_logger DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include)
 
-option(NO_SIMPLE_LOGGER_TESTS "Disable Current tests" OFF)
+option(NO_SIMPLE_LOGGER_TESTS "simple_logger Disable Current tests" OFF)
 
 if (NOT NO_SIMPLE_LOGGER_TESTS)
     include(FetchContent)
