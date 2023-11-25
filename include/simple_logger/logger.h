@@ -24,6 +24,19 @@ namespace simple_logger {
         DEBUG = 7
     };
 
+    // create a map of log level strings
+    static const std::map<LogLevel, std::string> log_level_strings{
+            {LogLevel::EMERGENCY, "emergency"},
+            {LogLevel::ALERT, "alert"},
+            {LogLevel::CRITICAL, "critical"},
+            {LogLevel::ERROR, "error"},
+            {LogLevel::WARNING, "warning"},
+            {LogLevel::NOTICE, "notice"},
+            {LogLevel::INFORMATIONAL, "info"},
+            {LogLevel::DEBUG, "debug"}
+    };
+
+    std::string log_level_to_string(LogLevel level);
     std::string get_colored_level(LogLevel level) ;
 
 
@@ -58,6 +71,8 @@ namespace simple_logger {
         bool operator==(const Logger &rhs) const;
 
         bool operator!=(const Logger &rhs) const;
+
+        operator std::string() const;
 
         void setLevel(const std::string &s);
 

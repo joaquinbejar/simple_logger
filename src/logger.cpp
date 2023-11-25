@@ -6,6 +6,15 @@
 
 namespace simple_logger {
 
+    std::string log_level_to_string(LogLevel level) {
+        auto it = log_level_strings.find(level);
+        if (it != log_level_strings.end()) {
+            return it->second;
+        } else {
+            throw std::runtime_error("Unknown log level");
+        }
+    }
+
     std::string get_colored_level(LogLevel level) {
         switch (level) {
             case LogLevel::INFORMATIONAL:
@@ -159,5 +168,9 @@ namespace simple_logger {
 
     bool Logger::operator!=(const Logger &rhs) const {
         return !(rhs == *this);
+    }
+
+    Logger::operator std::string() const {
+        return log_level_to_string(m_level);
     }
 }
