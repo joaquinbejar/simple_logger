@@ -128,6 +128,11 @@ TEST_CASE("Change logger string pointer debug", "[Logger]") {
 
 TEST_CASE("Logger send template function") {
 
+    SECTION("logger to string") {
+        simple_logger::Logger logger("debug"); // must log everything
+        REQUIRE("debug" == (std::string) logger);
+    }
+
     SECTION("Log level Debug") {
         simple_logger::Logger logger("debug"); // must log everything
 

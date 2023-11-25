@@ -72,7 +72,7 @@ namespace simple_logger {
 
         bool operator!=(const Logger &rhs) const;
 
-        operator std::string() const;
+        explicit operator std::string() const;
 
         void setLevel(const std::string &s);
 
