@@ -52,11 +52,13 @@ TEST_CASE("Logger can print in multi-thread environment and flush", "[Cache]") {
         threads.emplace_back([&logger, i] {
             for (int j = 0; j < 10; ++j) {
                 auto random_bool = generateRandomBool();
-                logger.send<LogLevel::DEBUG>("Last was " + std::to_string(logger.last_was_flush) +
+                logger.send<LogLevel::DEBUG>(
+//                        "Last was " + std::to_string(logger.last_was_flush) +
                         " is debug flush: " + std::to_string(random_bool) + " | Thread: " +
                         std::to_string(i), random_bool);
                 random_bool = generateRandomBool();
-                logger.send<LogLevel::INFORMATIONAL>("Last was " + std::to_string(logger.last_was_flush) +
+                logger.send<LogLevel::INFORMATIONAL>(
+//                        "Last was " + std::to_string(logger.last_was_flush) +
                         " is info flush: " + std::to_string(random_bool) + " | Thread: " +
                         std::to_string(i), random_bool);
                 random_bool = generateRandomBool();

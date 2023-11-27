@@ -95,7 +95,7 @@ namespace simple_logger {
             }
         }
 
-        std::atomic<bool> last_was_flush = false;
+
 
     private:
         LogLevel m_level = LogLevel::INFORMATIONAL;
@@ -112,6 +112,7 @@ namespace simple_logger {
 
         std::mutex m_mtx;
         std::mutex m_mtx_file;
+        std::atomic<bool> last_was_flush = false;
     };
 
 }
