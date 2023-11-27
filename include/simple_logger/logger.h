@@ -96,7 +96,6 @@ namespace simple_logger {
         }
 
 
-
     private:
         LogLevel m_level = LogLevel::INFORMATIONAL;
         std::ofstream m_log_file;
