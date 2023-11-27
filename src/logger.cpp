@@ -64,6 +64,31 @@ namespace simple_logger {
         this->m_level = level;
     }
 
+    Logger::Logger(Logger &&rhs) noexcept {
+        this->m_level = rhs.m_level;
+        this->write_to_file = rhs.write_to_file;
+    }
+
+    Logger &Logger::operator=(Logger &&rhs) noexcept {
+        if (this == &rhs) {
+            return *this;
+        }
+        this->m_level = rhs.m_level;
+        this->write_to_file = rhs.write_to_file;
+        return *this;
+    }
+
+    bool Logger::operator==(const Logger &rhs) const {
+        if (this->m_level == rhs.m_level && this->write_to_file == rhs.write_to_file) {
+            return true;
+        }
+        return false;
+    }
+
+    bool Logger::operator!=(const Logger &rhs) const {
+        return !(rhs == *this);
+    }
+
     void Logger::setLevel(const std::string &s) {
         if (s == "debug") {
             this->m_level = LogLevel::DEBUG;
@@ -98,25 +123,51 @@ namespace simple_logger {
     }
 
     void Logger::safe_cout(const std::string &s, bool flush) {
-        std::lock_guard<std::mutex> lock(m_mtx);
-        std::cout << s;
+        std::unique_lock<std::mutex> lock(m_mtx);
+        std::string ss = s;
         if (flush) {
-            std::cout.flush();
+            ss = "\r" + s;
+        } else if (last_was_flush.load(std::memory_order_seq_cst)) {
+            ss = "\n" + s;
         }
+
+        if (!flush) {
+            ss = ss + "\n";
+        }
+
+        std::cout << ss;
+        last_was_flush.store(flush, std::memory_order_seq_cst);
+        std::cout.flush();
+        lock.unlock();
+
         if (write_to_file) {
-            m_log_file << s ;
+            std::lock_guard<std::mutex> file_lock(m_mtx_file);
+            m_log_file << s;
         }
     }
 
     void Logger::safe_cerr(const std::string &s, bool flush) {
-        std::lock_guard<std::mutex> lock(m_mtx);
-        std::cerr << s;
+        std::unique_lock<std::mutex> lock(m_mtx);
+        std::string ss = s;
         if (flush) {
-            std::cerr.flush();
+            ss = "\r" + s;
+        } else if (last_was_flush.load(std::memory_order_seq_cst)) {
+            ss = "\n" + s;
         }
 
+        if (!flush) {
+            ss = ss + "\n";
+        }
+
+        std::cerr << ss;
+        last_was_flush.store(flush, std::memory_order_seq_cst);
+        std::cerr.flush();
+        lock.unlock();
+
+
         if (write_to_file) {
-            m_log_file << s ;
+            std::lock_guard<std::mutex> file_lock(m_mtx_file);
+            m_log_file << s;
         }
     }
 
@@ -125,11 +176,7 @@ namespace simple_logger {
         std::tm tm = *std::localtime(&t);
         std::ostringstream time_prefix;
         time_prefix << std::put_time(&tm, "%d-%m-%Y %H:%M:%S") << " " << s;
-        if (flush) {
-            safe_cout("\r" + time_prefix.str(), flush);
-        } else {
-            safe_cout(time_prefix.str() + "\n");
-        }
+        safe_cout(time_prefix.str(), flush);
     }
 
     void Logger::m_log_error(const std::string &s, bool flush) {
@@ -137,37 +184,7 @@ namespace simple_logger {
         std::tm tm = *std::localtime(&t);
         std::ostringstream time_prefix;
         time_prefix << std::put_time(&tm, "%d-%m-%Y %H:%M:%S") << " " << s;
-        if (flush) {
-            safe_cerr("\r" + time_prefix.str(), flush);
-        } else {
-            safe_cerr(time_prefix.str() + "\n");
-        }
-    }
-
-    bool Logger::operator==(const Logger &rhs) const {
-        if (this->m_level == rhs.m_level && this->write_to_file == rhs.write_to_file) {
-            return true;
-        }
-        return false;
-    }
-
-
-    Logger::Logger(Logger &&rhs) noexcept {
-        this->m_level = rhs.m_level;
-        this->write_to_file = rhs.write_to_file;
-    }
-
-    Logger &Logger::operator=(Logger &&rhs) noexcept {
-        if (this == &rhs) {
-            return *this;
-        }
-        this->m_level = rhs.m_level;
-        this->write_to_file = rhs.write_to_file;
-        return *this;
-    }
-
-    bool Logger::operator!=(const Logger &rhs) const {
-        return !(rhs == *this);
+        safe_cerr(time_prefix.str(), flush);
     }
 
     Logger::operator std::string() const {
