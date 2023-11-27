@@ -71,5 +71,6 @@ TEST_CASE("Logger can print in multi-thread environment and flush", "[Cache]") {
     for (auto &thread: threads) {
         thread.join();
     }
+    logger.send<LogLevel::INFORMATIONAL>("END");
     REQUIRE(true);
 }
