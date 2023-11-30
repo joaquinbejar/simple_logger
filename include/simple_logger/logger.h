@@ -26,18 +26,19 @@ namespace simple_logger {
 
     // create a map of log level strings
     static const std::map<LogLevel, std::string> log_level_strings{
-            {LogLevel::EMERGENCY, "emergency"},
-            {LogLevel::ALERT, "alert"},
-            {LogLevel::CRITICAL, "critical"},
-            {LogLevel::ERROR, "error"},
-            {LogLevel::WARNING, "warning"},
-            {LogLevel::NOTICE, "notice"},
+            {LogLevel::EMERGENCY,     "emergency"},
+            {LogLevel::ALERT,         "alert"},
+            {LogLevel::CRITICAL,      "critical"},
+            {LogLevel::ERROR,         "error"},
+            {LogLevel::WARNING,       "warning"},
+            {LogLevel::NOTICE,        "notice"},
             {LogLevel::INFORMATIONAL, "info"},
-            {LogLevel::DEBUG, "debug"}
+            {LogLevel::DEBUG,         "debug"}
     };
 
     std::string log_level_to_string(LogLevel level);
-    std::string get_colored_level(LogLevel level) ;
+
+    std::string get_colored_level(LogLevel level);
 
 
     class Logger {
@@ -84,6 +85,7 @@ namespace simple_logger {
 
         template<LogLevel logLevel>
         void send(const std::string &s, bool flush = false) {
+
             if (m_level >= logLevel) {
                 if (logLevel <= LogLevel::ERROR) {
                     m_log_error(get_colored_level(logLevel) + s, flush);
@@ -92,6 +94,7 @@ namespace simple_logger {
                 }
             }
         }
+
 
     private:
         LogLevel m_level = LogLevel::INFORMATIONAL;
@@ -107,8 +110,10 @@ namespace simple_logger {
         void m_log_error(const std::string &s, bool flush = false);
 
         std::mutex m_mtx;
+        std::mutex m_mtx_file;
+        std::atomic<bool> last_was_flush = false;
     };
-    
+
 }
 
 #endif //SIMPLE_LOGGER_LOGGER_H
