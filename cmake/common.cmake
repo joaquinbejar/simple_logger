@@ -1,7 +1,7 @@
 include(FetchContent)
 FetchContent_Declare(common
         GIT_REPOSITORY https://github.com/joaquinbejar/common_cpp.git
-        GIT_TAG v0.1.0
+        GIT_TAG dev
 )
 FetchContent_MakeAvailable(common)
 if (CMAKE_DEBUG)
