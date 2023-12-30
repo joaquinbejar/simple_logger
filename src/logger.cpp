@@ -20,21 +20,21 @@ namespace simple_logger {
             case LogLevel::INFORMATIONAL:
                 return simple_color::give_color(simple_color::Colors::WHITE, "[INFO]: ");
             case LogLevel::DEBUG:
-                return simple_color::give_color(simple_color::Colors::LIGHTGOLDENROD1, "[DEBUG]: ");
+                return simple_color::give_color(simple_color::Colors::SKYBLUE1, "[DEBUG]: ");
             case LogLevel::ERROR:
                 return simple_color::give_color(simple_color::Colors::RED, "[ERROR]: ");
             case LogLevel::EMERGENCY:
                 return simple_color::give_color(simple_color::Colors::MAGENTA, "[EMERGENCY]: ");
             case LogLevel::ALERT:
-                return simple_color::give_color(simple_color::Colors::ORANGE, "[ALERT]: ");
+                return simple_color::give_color(simple_color::Colors::DEEPPINK1A, "[ALERT]: ");
             case LogLevel::CRITICAL:
-                return simple_color::give_color(simple_color::Colors::ORANGE, "[CRITICAL]: ", true);
+                return simple_color::give_color(simple_color::Colors::LIGHTCORAL, "[CRITICAL]: ", true);
             case LogLevel::WARNING:
                 return simple_color::give_color(simple_color::Colors::YELLOW, "[WARNING]: ");
             case LogLevel::NOTICE:
                 return simple_color::give_color(simple_color::Colors::LIGHTGREEN, "[NOTICE]: ");
             default:
-                return "[UNKNOWN]: ";
+                return simple_color::give_color(simple_color::Colors::GREY54, "[UNKNOWN]: ");
         }
     }
 
