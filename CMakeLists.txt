@@ -10,7 +10,6 @@ if (CMAKE_DEBUG)
     message(STATUS "simple_logger SIMPLE_LOGGER_INCLUDE ${SIMPLE_LOGGER_INCLUDE}")
 endif ()
 
-include(cmake/simple_color.cmake)
 include(cmake/common.cmake)
 include(cmake/simple_config.cmake)
 
