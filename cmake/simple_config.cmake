@@ -1,7 +1,7 @@
 include(FetchContent)
 FetchContent_Declare(simple_config
         GIT_REPOSITORY https://github.com/joaquinbejar/simple_config.git
-        GIT_TAG v0.1.0
+        GIT_TAG dev
 )
 FetchContent_MakeAvailable(simple_config)
 if (CMAKE_DEBUG)
