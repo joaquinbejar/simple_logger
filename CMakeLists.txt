@@ -10,6 +10,20 @@ if (CMAKE_DEBUG)
     message(STATUS "simple_logger SIMPLE_LOGGER_INCLUDE ${SIMPLE_LOGGER_INCLUDE}")
 endif ()
 
+include(FetchContent)
+# Declared before the sub-dependencies so this pin wins over the Catch2 they
+# declare themselves (FetchContent honours the first declaration).
+FetchContent_Declare(Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG v3.16.0
+)
+# nlohmann_json is only pulled in transitively (common_cpp v0.1.5 pins v3.11.2,
+# whose cmake_minimum_required is rejected by CMake >= 4.0); pin the current
+# release here so it takes precedence.
+FetchContent_Declare(nlohmann_json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG v3.12.0
+)
 include(cmake/common.cmake)
 include(cmake/simple_config.cmake)
 
@@ -34,12 +48,6 @@ install(DIRECTORY include/ DESTINATION include)
 option(NO_SIMPLE_LOGGER_TESTS "simple_logger Disable Current tests" OFF)
 
 if (NOT NO_SIMPLE_LOGGER_TESTS)
-    include(FetchContent)
-
-    FetchContent_Declare(Catch2
-            GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-            GIT_TAG v3.4.0
-    )
     FETCHCONTENT_GETPROPERTIES(Catch2)
     FETCHCONTENT_MAKEAVAILABLE(Catch2)
 
